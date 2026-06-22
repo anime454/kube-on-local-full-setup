@@ -1,6 +1,6 @@
 service_name: mockup-app
 image_name: mockup
-tag: latest
+image_tag: latest
 imagePullPolicy: IfNotPresent
 
 namespace: mockup-app-dev

@@ -58,8 +58,5 @@ spec:
               value: {{ .Values.port | quote }}
             - name: ENVIRONMENT
               value: {{ .Values.environment | quote }}
-          envFrom:
-            - secretRef:
-                name: {{ .Values.infisical_secret_name }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

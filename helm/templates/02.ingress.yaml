@@ -18,7 +18,7 @@ spec:
               service:
                 name: {{ .Values.service_name }}-service
                 port:
-                  number: 8080
+                  number: 80
 
 {{- if .Values.tls.enabled }}
   tls:
