@@ -25,8 +25,8 @@ metallb:
 	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/$(METALLB_VERSION)/config/manifests/metallb-native.yaml
 	kubectl rollout status -n metallb-system deployment/controller --timeout=120s
 	kubectl rollout status -n metallb-system daemonset/speaker --timeout=120s
-	@GATEWAY=$$(docker network inspect kind --format '{{(index .IPAM.Config 0).Gateway}}') && \
-	BASE=$$(echo "$$GATEWAY" | cut -d. -f1,2) && \
+	@NODE_IP=$$(docker inspect $(CLUSTER_NAME)-control-plane --format '{{.NetworkSettings.Networks.kind.IPAddress}}') && \
+	BASE=$$(echo "$$NODE_IP" | cut -d. -f1,2) && \
 	RANGE="$$BASE.255.200-$$BASE.255.250" && \
 	sed 's|$${METALLB_RANGE}|'"$$RANGE"'|' metallb/ip-pool.config.yaml | kubectl apply -f -
 
