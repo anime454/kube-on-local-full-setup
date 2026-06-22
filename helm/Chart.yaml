@@ -1,0 +1,11 @@
+apiVersion: v2
+name: mockup-app
+description: JUST A MOCKUP
+type: application
+version: 0.1.1
+appVersion: 'latest'
+keywords:
+  - go
+  - microservice
+maintainers:
+  - name: Mockup Team

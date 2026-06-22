@@ -1,0 +1,36 @@
+# Note: This project uses .dockerignore from the build-context root (project root),
+
+# Version control
+.git
+.gitignore
+
+# Editor / IDE
+.vscode
+.idea
+.DS_Store
+
+# Documentation
+*.md
+
+# Build artifacts (re-created inside the image)
+node_modules
+dist
+coverage
+.nyc_output
+
+# Logs & upload directories
+logs
+log
+upload
+tempupload
+*.log
+
+# Helm / K8s manifests — not needed in the image
+devops/helm
+devops/k8s
+
+# Legacy root-level Dockerfiles
+*.Dockerfile
+
+# Test suite
+test/

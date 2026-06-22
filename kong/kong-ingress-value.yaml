@@ -1,0 +1,13 @@
+type: LoadBalancer
+
+admin:
+  enabled: true
+  http:
+    enabled: true
+    servicePort: 8001
+
+manager:
+  enabled: true
+  http:
+    enabled: true
+    servicePort: 8002

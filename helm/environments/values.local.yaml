@@ -1,0 +1,49 @@
+service_name: mockup-app
+image_name: mockup
+tag: latest
+imagePullPolicy: IfNotPresent
+
+namespace: mockup-app-dev
+
+# Network
+port: 3000
+ingress:
+  enabled: true
+ingress_path: /mockup-app/v1
+ingress_host: mockup.app.local
+
+tls:
+  enabled: false
+
+# Environment
+environment: development
+
+hostAliases: []
+
+# Infisical K8s Secret
+infisical_secret_name: mockup-app-secret
+
+# Resources — relaxed for development
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 100m
+  limits:
+    memory: 512Mi
+    cpu: 500m
+
+# HPA — minimal, faster feedback loop
+hpa:
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+  scaleUp:
+    stabilizationWindowSeconds: 60
+    percentPolicy: 50
+    podsPolicy: 1
+    periodSeconds: 60
+  scaleDown:
+    stabilizationWindowSeconds: 180
+    percentPolicy: 10
+    periodSeconds: 60

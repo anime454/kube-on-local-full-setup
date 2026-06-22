@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.service_name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.service_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.service_name }}
+    spec:
+      serviceAccountName: {{ .Values.service_name }}
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      {{- end }}
+      {{- if .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml .Values.hostAliases | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+      containers:
+        - name: {{ .Values.service_name }}
+          image: {{ .Values.image_name }}:{{ .Values.image_tag | default .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - containerPort: {{ .Values.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.port }}
+            initialDelaySeconds: 15
+            failureThreshold: 2
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.port }}
+            initialDelaySeconds: 5
+            failureThreshold: 2
+            periodSeconds: 10
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: {{ .Values.port | quote }}
+            - name: ENVIRONMENT
+              value: {{ .Values.environment | quote }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.infisical_secret_name }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

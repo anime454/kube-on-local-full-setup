@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.service_name }}-ingress
+  namespace: {{ .Values.namespace }}
+  annotations:
+    konghq.com/strip-path: "true"
+
+spec:
+  ingressClassName: kong
+  rules:
+    - host: {{ .Values.ingress_host }}
+      http:
+        paths:
+          - path: {{ .Values.ingress_path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.service_name }}-service
+                port:
+                  number: 8080
+
+{{- if .Values.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress_host }}
+      secretName: {{ .Values.service_name }}-tls
+{{- end }}
