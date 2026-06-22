@@ -23,7 +23,8 @@ cluster:
 
 metallb:
 	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/$(METALLB_VERSION)/config/manifests/metallb-native.yaml
-	kubectl wait -n metallb-system --for=condition=ready pod -l app=metallb --timeout=120s
+	kubectl rollout status -n metallb-system deployment/controller --timeout=120s
+	kubectl rollout status -n metallb-system daemonset/speaker --timeout=120s
 	@GATEWAY=$$(docker network inspect kind --format '{{(index .IPAM.Config 0).Gateway}}') && \
 	BASE=$$(echo "$$GATEWAY" | cut -d. -f1,2) && \
 	RANGE="$$BASE.255.200-$$BASE.255.250" && \
