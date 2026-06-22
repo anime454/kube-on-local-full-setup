@@ -1,3 +1,4 @@
+{{- if .Values.hpa.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -41,3 +42,4 @@ spec:
           value: {{ .Values.hpa.scaleDown.percentPolicy }}
           periodSeconds: {{ .Values.hpa.scaleDown.periodSeconds }}
       selectPolicy: Min
+{{- end }}

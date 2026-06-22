@@ -27,7 +27,7 @@ RUN apk --no-cache add \
     tzdata \
     wget
 
-RUN adduser -D -s /bin/sh appuser
+RUN adduser -D -u 1001 -s /bin/sh appuser
 
 WORKDIR /app
 
@@ -40,7 +40,7 @@ USER appuser
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/|| exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
 
 ENV GO_ENV=production \
     LOG_LEVEL=info \

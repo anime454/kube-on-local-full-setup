@@ -25,6 +25,7 @@ metallb:
 	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/$(METALLB_VERSION)/config/manifests/metallb-native.yaml
 	kubectl rollout status -n metallb-system deployment/controller --timeout=120s
 	kubectl rollout status -n metallb-system daemonset/speaker --timeout=120s
+	kubectl wait --for=condition=Established --timeout=60s crd/ipaddresspools.metallb.io crd/l2advertisements.metallb.io
 	@NODE_IP=$$(docker inspect $(CLUSTER_NAME)-control-plane --format '{{.NetworkSettings.Networks.kind.IPAddress}}') && \
 	BASE=$$(echo "$$NODE_IP" | cut -d. -f1,2) && \
 	RANGE="$$BASE.255.200-$$BASE.255.250" && \
@@ -34,6 +35,7 @@ kong:
 	helm repo add kong https://charts.konghq.com 2>/dev/null || true
 	helm repo update
 	kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/$(GATEWAY_API_VERSION)/standard-install.yaml
+	kubectl wait --for=condition=Established --timeout=60s crd/gateways.gateway.networking.k8s.io crd/httproutes.gateway.networking.k8s.io crd/grpcroutes.gateway.networking.k8s.io
 	helm upgrade --install kong kong/kong \
 		-n $(KONG_NAMESPACE) \
 		--create-namespace \

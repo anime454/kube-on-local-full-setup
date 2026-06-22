@@ -20,9 +20,6 @@ environment: development
 
 hostAliases: []
 
-# Infisical K8s Secret
-infisical_secret_name: mockup-app-secret
-
 # Resources — relaxed for development
 resources:
   requests:
@@ -34,6 +31,7 @@ resources:
 
 # HPA — minimal, faster feedback loop
 hpa:
+  enabled: false
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 70
