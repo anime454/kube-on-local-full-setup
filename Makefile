@@ -1,4 +1,4 @@
-.PHONY: all cluster metallb kong build namespace deploy clean
+.PHONY: all cluster metallb kong build namespace deploy clean clean-all
 
 CLUSTER_NAME   := local-cluster
 APP_NAME       := mockup-app
@@ -58,3 +58,18 @@ deploy:
 
 clean:
 	kind delete cluster --name $(CLUSTER_NAME)
+
+clean-all:
+	kind delete cluster --name $(CLUSTER_NAME) 2>/dev/null || true
+	helm uninstall kong -n $(KONG_NAMESPACE) 2>/dev/null || true
+	helm uninstall $(APP_NAME) -n $(APP_NAMESPACE) 2>/dev/null || true
+	helm repo remove kong 2>/dev/null || true
+	kubectl delete namespace $(KONG_NAMESPACE) --ignore-not-found
+	kubectl delete namespace $(APP_NAMESPACE) --ignore-not-found
+	kubectl delete namespace metallb-system --ignore-not-found
+	docker rmi $(APP_IMAGE) 2>/dev/null || true
+	@echo ""
+	@echo "=========================================="
+	@echo "  Environment fully cleaned."
+	@echo "  Run 'make all' to rebuild from scratch."
+	@echo "=========================================="
