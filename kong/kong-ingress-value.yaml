@@ -1,4 +1,13 @@
-type: LoadBalancer
+proxy:
+  type: LoadBalancer
+  http:
+    enabled: true
+    servicePort: 80
+    nodePort: 32080
+  tls:
+    enabled: true
+    servicePort: 443
+    nodePort: 32443
 
 admin:
   enabled: true
