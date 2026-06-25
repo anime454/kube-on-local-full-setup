@@ -1,0 +1,28 @@
+apiVersion: secrets.infisical.com/v1beta1
+kind: InfisicalStaticSecret
+metadata:
+  name: my-static-secret
+  namespace: local-dev
+  labels:
+    label-to-be-passed-to-managed-secret: sample-value
+  annotations:
+    example.com/annotation-to-be-passed-to-managed-secret: "sample-value"
+spec:
+  infisicalAuthRef:
+    name: my-infisical-auth
+    namespace: local-dev
+
+  syncOptions:
+    refreshInterval: 60s
+    instantUpdates: false
+
+  sources:
+    - projectId: 4445aabc-7c2c-4319-868a-36d2610450f6
+      environmentSlug: dev
+      secretPath: "/"
+
+  targets:
+    - name: local-dev-api-secret
+      namespace: local-dev
+      kind: Secret
+      creationPolicy: Owner

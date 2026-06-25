@@ -1,0 +1,7 @@
+apiVersion: secrets.infisical.com/v1beta1
+kind: InfisicalConnection
+metadata:
+  name: infisical-connection
+  namespace: local-dev
+spec:
+  address: http://192.168.64.52:9991

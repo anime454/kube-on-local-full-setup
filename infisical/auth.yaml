@@ -1,0 +1,19 @@
+apiVersion: secrets.infisical.com/v1beta1
+kind: InfisicalAuth
+metadata:
+  name: my-infisical-auth
+  namespace: local-dev
+spec:
+  infisicalConnectionRef:
+    name: infisical-connection
+    namespace: local-dev
+  method: universal
+  universal:
+    clientIdRef:
+      name: infisical-auth
+      namespace: local-dev
+      key: clientId
+    clientSecretRef:
+      name: infisical-auth
+      namespace: local-dev
+      key: clientSecret
